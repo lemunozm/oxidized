@@ -61,10 +61,11 @@ void main() {
         expect(v, equals(3));
         called++;
         return 1;
-      }, (err) => fail('oh no'));
+      }, ((err) => fail('oh no')) as int Function(dynamic));
       expect(returned, equals(1));
       expect(called, equals(1));
-      returned = Result.err(Exception()).match((v) => fail('oh no'), (err) {
+      returned = Result.err(Exception())
+          .match(((v) => fail('oh no')) as int Function(dynamic), (err) {
         expect(err, isNotNull);
         called++;
         return 2;
@@ -81,12 +82,12 @@ void main() {
           called++;
           return 1;
         },
-        err: (err) => fail('oh no'),
+        err: ((err) => fail('oh no')),
       );
       expect(called, equals(1));
       expect(returned, equals(1));
       returned = Result.err(Exception()).when(
-        ok: (v) => fail('oh no'),
+        ok: ((v) => fail('oh no')),
         err: (err) {
           expect(err, isNotNull);
           called++;
@@ -144,13 +145,19 @@ void main() {
       expect(Result.ok(2).and(Result.err(Exception())), isA<Err>());
       expect(Result.err(Exception()).and(Result.ok(2)), isA<Err>());
       expect(Result.ok(2).andThen((v) => Result.ok(v * 2)).unwrap(), equals(4));
-      expect(Result.err(Exception()).andThen((v) => fail('oh no')), isA<Err>());
+      expect(
+          Result.err(Exception()).andThen(((v) => fail('oh no'))
+              as Result<dynamic, Exception> Function(dynamic)),
+          isA<Err>());
     });
 
     test('this or that', () {
       expect(Result.ok(2).or(Result.err(Exception())), isA<Ok>());
       expect(Result.err(Exception()).or(Result.ok(2)), isA<Ok>());
-      expect(Result.ok(2).orElse((err) => fail('oh no')), isA<Ok>());
+      expect(
+          Result.ok(2).orElse(((err) => fail('oh no')) as Result<int, dynamic>
+              Function(dynamic)),
+          isA<Ok>());
       expect(
         Result.err(Exception()).orElse((err) => Result.err(err)),
         isA<Err>(),
