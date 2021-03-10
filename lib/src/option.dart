@@ -13,14 +13,17 @@ abstract class Option<T> extends Equatable {
   const Option();
 
   /// Create a `Some` option with the given value.
-  ///
-  /// Passing a `null` value will result in a `None`.
-  factory Option.some(T v) {
-    return v == null ? None() : Some(v);
-  }
+  factory Option.some(T v) => Some(v);
 
   /// Create a `None` option with no value.
   factory Option.none() => None();
+
+  /// Create a `Some` option with the given value.
+  ///
+  /// Passing a `null` value will result in a `None`.
+  factory Option.of(T? v) {
+    return v == null ? None() : Some(v);
+  }
 
   /// Returns `true` if the option is a `Some` value.
   bool isSome();
