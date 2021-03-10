@@ -104,6 +104,9 @@ abstract class Option<T> extends Equatable {
   /// Returns `Some` if exactly one of `this`, `optb` is `Some`, otherwise
   /// returns `None`.
   Option<T> xor(Option<T> optb);
+
+  /// Returns a nullable value representing this option.
+  T? toNullable();
 }
 
 /// Type `Some<T>` is an `Option` that contains a value.
@@ -188,6 +191,9 @@ class Some<T> extends Option<T> {
 
   @override
   Option<T> xor(Option<T> optb) => optb is None ? this : Option.none();
+
+  @override
+  T? toNullable() => _some;
 }
 
 /// Type `None<T>` is an `Option` that does not contain any value.
@@ -269,4 +275,7 @@ class None<T> extends Option<T> {
 
   @override
   Option<T> xor(Option<T> optb) => optb is Some ? optb : Option.none();
+
+  @override
+  T? toNullable() => null;
 }
